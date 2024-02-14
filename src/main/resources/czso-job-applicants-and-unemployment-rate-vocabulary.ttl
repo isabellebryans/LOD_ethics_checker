@@ -1,0 +1,99 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sdmx: <http://purl.org/linked-data/sdmx#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sdmx-subject: <http://purl.org/linked-data/sdmx/2009/subject#> .
+@prefix sdmx-metadata: <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix def: <http://data.czso.cz/ontology/job-applicants-and-unemployment-rate> .
+@prefix eugeo: <http://ec.europa.eu/eurostat/ramon/ontologies/geographic.rdf#> .
+@prefix dbpedia: <http://dbpedia.org/resource/> .
+@prefix eurovoc: <http://eurovoc.europa.eu/> .
+@prefix sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-code: <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix czso: <http://data.czso.cz/ontology/> .
+@prefix dataset: <http://data.czso.cz/resource/dataset/job-applicants-and-unemployment-rate> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+
+<http://data.czso.cz/resource/dataset/job-applicants-and-unemployment-rate> a qb:DataSet ;
+                                                                            qb:structure czso:job-applicants-and-unemployment-rate ;
+                                                                            rdfs:label "Data cube with statistics of job applicants and unemployment rate in regions of Czech Republic"@en, "Datová kostka se statistikou neumístěných uchazečů o zaměstnání a mírou nezaměstnanosti v regionech České republiky"@cs ;
+                                                                            rdfs:comment "Data cube with statistics of job applicants and unemployment rate in regions of Czech Republic"@en, "Datová kostka se statistikou neumístěných uchazečů o zaměstnání a mírou nezaměstnanosti v regionech České republiky"@cs .
+
+czso:job-applicants-and-unemployment-rate a qb:DataStructureDefinition ;
+                                          rdfs:label "Definition of a data cube with statistics of job applicants and unemployment rate in regions of Czech Republic"@en, "Definice datové kostky se statistikou neumístěných uchazečů o zaměstnání a mírou nezaměstnanosti v regionech České republiky"@cs ;
+                                          qb:component [
+                                                rdfs:label "The dimension representing a region"@en, "Dimenze reprezentující region"@cs ;
+                                                qb:dimension czso:refArea ;
+                                                qb:order 1 ;
+                                            ], [
+                                                rdfs:label "The dimension representing a year"@en, "Dimezne reprezentující rok"@cs ;
+                                                qb:dimension czso:refPeriod ;
+                                                qb:order 2 ;
+                                            ], [
+                                                rdfs:label "The dimension representing sex"@en, "Dimezne reprezentující pohlaví"@cs ;
+                                                qb:dimension czso:sex ;
+                                                qb:order 3 ;
+                                            ], [
+                                                rdfs:label "Job applicants"@en, "Neumístění uchazeči o zaměstnání"@cs ;
+                                                qb:measure czso:neumisteniUchazeciOZamestnani ;
+                                            ], [
+                                                rdfs:label "Available job applicants"@en, "Dosažitelní neumístění uchazeči o zaměstnání"@cs ;
+                                                qb:measure czso:dosazitelniNeumisteniUchazeciOZamestnani ;
+                                            ], [
+                                                rdfs:label "Unemployment rate"@en, "Podíl nezaměstnaných"@cs ;
+                                                qb:measure czso:podilNezamestnanych ;
+                                            ], [
+                                                rdfs:label "Number of vacancies"@en, "Počet volných míst"@cs ;
+                                                qb:measure czso:pocetVolnychMist ;
+                                            ] .
+
+czso:refArea a rdf:Property, qb:DimensionProperty ;
+             rdfs:label "reference area"@en, "referenční oblast"@cs ;
+             rdfs:subPropertyOf sdmx-dimension:refArea ;
+             qb:concept sdmx-concept:refArea .
+
+czso:refPeriod a rdf:Property, qb:DimensionProperty ;
+               rdfs:label "reference period"@en, "referenční období"@cs ;
+               rdfs:subPropertyOf sdmx-dimension:refPeriod ;
+               qb:concept sdmx-concept:refPeriod .
+
+czso:sex a rdf:Property, qb:DimensionProperty ;
+         rdfs:label "sex"@en, "pohlaví"@cs ;
+         rdfs:comment "The state of being male or female"@en, "Hodnota, která udává, zda je osoba mužem či ženou"@cs ;
+         rdfs:subPropertyOf sdmx-dimension:sex ;
+         qb:concept sdmx-concept:sex, dbpedia:Sex .
+
+czso:neumisteniUchazeciOZamestnani a rdf:Property, qb:MeasureProperty ;
+                                   rdfs:label "job applicants"@en, "neumístění uchazeči o zaměstnání"@cs ;
+                                   rdfs:comment "Job applicants"@en, "Uchazečem o zaměstnání může být osoba, která splňuje podmínky způsobilosti vystupovat v pracovně právních vztazích (§ 11 zákoníku práce) a která má trvalý pobyt na území České republiky (v případě cizinců ve smyslu tzv. pobytového zákona č. 326/99 z 30.11.1999, o pobytu cizinců na území ČR a o změně některých zákonů)."@cs ;
+                                   rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                   qb:concept dbpedia:Application_for_employment, dbpedia:Job_applicant, eurovoc:376 ;
+                                   rdfs:range xsd:nonNegativeInteger .
+
+czso:dosazitelniNeumisteniUchazeciOZamestnani a rdf:Property, qb:MeasureProperty ;
+                                              rdfs:label "available job applicants"@en, "dosažitelní neumístění uchazeči o zaměstnání"@cs ;
+                                              rdfs:comment "Available job applicants"@en, "Jedná se o uchazeče o zaměstnání, kteří mohou bezprostředně nastoupit do zaměstnání při nabídce vhodného pracovního místa, tj. evidovaní nezaměstnaní, kteří nemají žádnou objektivní překážku pro přijetí zaměstnání. Za dosažitelné se nepovažují uchazeči o zaměstnání ve vazbě, ve výkonu trestu, uchazeči v pracovní neschopnosti, uchazeči, kteří jsou zařazeni na rekvalifikační kurzy nebo uchazeči, kteří vykonávají krátkodobé zaměstnání, a dále uchazeči, kteří pobírají peněžitou pomoc v mateřství nebo kterým je poskytována podpora v nezaměstnanosti po dobu mateřské dovolené."@cs ;
+                                              rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                              qb:concept dbpedia:Application_for_employment, dbpedia:Job_applicant, eurovoc:376 ;
+                                              rdfs:range xsd:nonNegativeInteger .
+
+czso:podilNezamestnanych a rdf:Property, qb:MeasureProperty ;
+                         rdfs:label "unemployment rate"@en, "podíl nezaměstnaných"@cs ;
+                         rdfs:comment "Unemployment rate"@en, "Podíl nezaměstnaných osob vyjadřuje podíl dosažitelných uchazečů o zaměstnání ve věku 15 – 64 let ze všech obyvatel ve stejném věku. Tento ukazatel nahrazuje míru registrované nezaměstnanosti, která poměřuje všechny dosažitelné uchazeče o zaměstnání pouze k ekonomicky aktivním osobám."@cs ;
+                         rdfs:subPropertyOf sdmx-measure:obsValue ;
+                         qb:concept dbpedia:Unemployment, dbpedia:Ratio ;
+                         rdfs:range xsd:nonNegativeInteger .
+
+czso:pocetVolnychMist a rdf:Property, qb:MeasureProperty ;
+                      rdfs:label "number of vacancies"@en, "počet volných míst"@cs ;
+                      rdfs:comment "Number of vacancies"@en, "Nově vytvořená nebo uvolněná pracovní místa hlášená zaměstnavateli úřadům práce za účelem získání zaměstnanců. Volnými pracovními místy se rozumí nově vytvořená nebo uvolněná pracovní místa, na která zaměstnavatel zamýšlí získat zaměstnance. Zaměstnavatel oznamuje do pěti kalendářních dnů příslušnému úřadu práce volná pracovní místa a jejich charakteristiku a neprodleně, nejpozději do pěti kalendářních dnů, oznamuje i obsazení těchto míst."@cs ;
+                      rdfs:subPropertyOf sdmx-measure:obsValue ;
+                      qb:concept dbpedia:Vacancy ;
+                      rdfs:range xsd:nonNegativeInteger.
+
