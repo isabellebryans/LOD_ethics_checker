@@ -1,0 +1,99 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sdmx: <http://purl.org/linked-data/sdmx#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix qb: <http://purl.org/linked-data/cube#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix sdmx-subject: <http://purl.org/linked-data/sdmx/2009/subject#> .
+@prefix sdmx-metadata: <http://purl.org/linked-data/sdmx/2009/metadata#> .
+@prefix def: <http://data.czso.cz/ontology/unemployment-rate> .
+@prefix eugeo: <http://ec.europa.eu/eurostat/ramon/ontologies/geographic.rdf#> .
+@prefix dbpedia: <http://dbpedia.org/resource/> .
+@prefix eurovoc: <http://eurovoc.europa.eu/> .
+@prefix sdmx-measure: <http://purl.org/linked-data/sdmx/2009/measure#> .
+@prefix sdmx-code: <http://purl.org/linked-data/sdmx/2009/code#> .
+@prefix sdmx-concept: <http://purl.org/linked-data/sdmx/2009/concept#> .
+@prefix sdmx-attribute: <http://purl.org/linked-data/sdmx/2009/attribute#> .
+@prefix czso: <http://data.czso.cz/ontology/> .
+@prefix dataset: <http://data.czso.cz/resource/dataset/unemployment-rate> .
+@prefix sdmx-dimension: <http://purl.org/linked-data/sdmx/2009/dimension#> .
+
+<http://data.czso.cz/resource/dataset/unemployment-rate> a qb:DataSet ;
+                                                         qb:structure czso:unemployment-rate ;
+                                                         rdfs:label "Data cube with statistics of unemployment rate in regions of Czech Republic"@en, "Datová kostka se statistikou míry registrované nezaměstnanosti v regionech České republiky"@cs ;
+                                                         rdfs:comment "Data cube with statistics of unemployment rate in regions of Czech Republic"@en, "Datová kostka se statistikou míry registrované nezaměstnanosti v regionech České republiky"@cs .
+
+czso:refArea a rdf:Property, qb:DimensionProperty ;
+             rdfs:label "reference area"@en, "referenční oblast"@cs ;
+             rdfs:subPropertyOf sdmx-dimension:refArea ;
+             qb:concept sdmx-concept:refArea .
+
+czso:pocetUchazecuSNarokemNaPodporuVNezamestnanosti a rdf:Property, qb:MeasureProperty ;
+                                                    rdfs:label "number of job applicants entitled to compensations"@en, "počet uchazečů s nárokem na podporu v nezaměstnanosti"@cs ;
+                                                    rdfs:comment "Number of job applicants entitled to compensations"@en, "Osoby pobírající příspěvek v nezaměstnanosti"@cs ;
+                                                    rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                                    qb:concept dbpedia:Unemployment, dbpedia:Unemployment_benefits ;
+                                                    rdfs:range xsd:nonNegativeInteger .
+
+czso:pocetUchazecuVRekvalifikaci a rdf:Property, qb:MeasureProperty ;
+                                 rdfs:label "number of job applicants in retraining programme"@en, "počet uchazečů v rekvalifikaci"@cs ;
+                                 rdfs:comment "Number of job applicants in retraining programme"@en, "Počet uchazečů v rekvalifikaci"@cs ;
+                                 rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                 qb:concept dbpedia:Unemployment, dbpedia:Retraining ;
+                                 rdfs:range xsd:nonNegativeInteger .
+
+czso:refPeriod a rdf:Property, qb:DimensionProperty ;
+               rdfs:label "reference period"@en, "referenční období"@cs ;
+               rdfs:subPropertyOf sdmx-dimension:refPeriod ;
+               qb:concept sdmx-concept:refPeriod .
+
+czso:unemployment-rate a qb:DataStructureDefinition ;
+                       rdfs:label "Definition of a data cube with statistics of unemployment rate in regions of Czech Republic"@en, "Definice datové kostky se statistikou míry registrované nezaměstnanosti v regionech České republiky"@cs ;
+                       qb:component [
+                             rdfs:label "The dimension representing a region"@en, "Dimenze reprezentující region"@cs ;
+                             qb:dimension czso:refArea ;
+                             qb:order 1 ;
+                         ], [
+                             rdfs:label "The dimension representing a year"@en, "Dimezne reprezentující rok"@cs ;
+                             qb:dimension czso:refPeriod ;
+                             qb:order 2 ;
+                         ], [
+                             rdfs:label "The dimension representing sex"@en, "Dimezne reprezentující pohlaví"@cs ;
+                             qb:dimension czso:sex ;
+                             qb:order 3 ;
+                         ], [
+                             rdfs:label "Unemployment ratio"@en, "Míra registrované nezaměstnanosti"@cs ;
+                             qb:measure czso:miraRegistrovaneNezamestnanosti ;
+                         ], [
+                             rdfs:label "Number of job applicants entitled to compensations"@en, "Počet uchazečů s nárokem na podporu v nezaměstnanosti"@cs ;
+                             qb:measure czso:pocetUchazecuSNarokemNaPodporuVNezamestnanosti ;
+                         ], [
+                             rdfs:label "Number of job applicants in retraining programme"@en, "Počet uchazečů v rekvalifikaci"@cs ;
+                             qb:measure czso:pocetUchazecuVRekvalifikaci ;
+                         ], [
+                             rdfs:label "Number of job applicants in retraining programme with subsidy"@en, "Počet uchazečů v rekvalifikaci s příspěvkem v nezaměstnanosti"@cs ;
+                             qb:measure czso:pocetUchazecuVRekvalifikaciSPrispevkemVNezamestnanosti ;
+                         ] .
+
+czso:sex a rdf:Property, qb:DimensionProperty ;
+         rdfs:label "sex"@en, "pohlaví"@cs ;
+         rdfs:comment "The state of being male or female"@en, "Hodnota, která udává, zda je osoba mužem či ženou"@cs ;
+         rdfs:subPropertyOf sdmx-dimension:sex ;
+         qb:concept sdmx-concept:sex, dbpedia:Sex .
+
+czso:miraRegistrovaneNezamestnanosti a rdf:Property, qb:MeasureProperty ;
+                                     rdfs:label "unemployment ratio"@en, "míra registrované nezaměstnanosti"@cs ;
+                                     rdfs:comment "Unemployment ratio"@en, "Míra registrované nezaměstnanosti vyjadřuje podíl počtu nezaměstnaných registrovaných úřady práce na disponibilní pracovní síle (v procentech), kde čitatel a jmenovatel jsou ukazatele konstruované podle následujících algoritmů: Čitatel : počet tzv. dosažitelných neumístěných uchazečů o zaměstnání (vč. občanů ČR a občanů EU (EHP), jsou to evidovaní nezaměstnaní ke konci období, kteří mohou ihned nastoupit do zaměstnání. Jmenovatel : pro větší územní jednotky (okresy, kraje, oblasti, atd.) je tvořen tzv. pracovní silou, tj. počtem zaměstnaných z VŠPS + počtem zaměstnaných občanů EU (EHP) + počtem pracujících cizinců ze třetích zemí s platným povolením k zaměstnání či živnostenským oprávněním + počtem dosažitelných neumístěných uchazečů o zaměstnání (vše klouzavý roční průměr). Pro menší územní jednotky (obce, správní obvody obcí s rozšířenou působností, atd.) je tvořen počtem ekonomicky aktivních osob odvozeným z výsledků posledního SLDB, tj. jsou zahrnuty všechny zaměstnané osoby, zaměstnavatelé, samostatně činní, pracující studenti a učni, ženy na mateřské dovolené v trvání 28 nebo 37 týdnů, osoby v základní, náhradní nebo civilní vojenské službě, ve vazbě a výkonu trestu a osoby nezaměstnané (podle okamžitého stavu k rozhodnému okamžiku sčítání, bez ohledu na formu vztahu k zaměstnavateli)."@cs ;
+                                     rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                     qb:concept dbpedia:Unemployment, dbpedia:Ratio ;
+                                     rdfs:range xsd:nonNegativeInteger .
+
+czso:pocetUchazecuVRekvalifikaciSPrispevkem a rdf:Property, qb:MeasureProperty ;
+                                            rdfs:label "number of job applicants with unemployment compensation in retraining programme"@en, "počet uchazečů v rekvalifikaci s příspěvkem v nezaměstnanosti"@cs ;
+                                            rdfs:comment "Number of job applicants with unemployment compensation in retraining programme"@en, "Osoby v rekvalifikaci s příspěvkem v nezaměstnanosti"@cs ;
+                                            rdfs:subPropertyOf sdmx-measure:obsValue ;
+                                            qb:concept dbpedia:Unemployment, dbpedia:Retraining, dbpedia:Unemployment_benefits ;
+                                            rdfs:range xsd:nonNegativeInteger .
+
