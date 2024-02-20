@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class loadData {
+public class LoadData {
     public static Model initAndLoadMode;
 
     public static Model initAndLoadModelFromFolder(String filename, Lang lang) throws IOException {
@@ -26,7 +26,7 @@ public class loadData {
     public static Model initAndLoadModelFromResource(String filename, Lang lang) throws IOException {
         // Turn file into input stream to be read
         File newFile = new File(filename);
-        InputStream dataModelIS = loadData.class.getClassLoader().getResourceAsStream(filename);
+        InputStream dataModelIS = LoadData.class.getClassLoader().getResourceAsStream(filename);
         //InputStream dataModelIS = new FileInputStream(newFile);
         // Create empty RDF model
         Model dataModel = ModelFactory.createDefaultModel();
