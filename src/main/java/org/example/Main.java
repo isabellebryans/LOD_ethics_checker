@@ -1,11 +1,13 @@
 package org.example;
-import data_checker.DataChecker;
+import data_checker.DataSet;
+import ont_checker.FoopsChecker;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import ont_checker.OntologyChecker;
 import utils.LoadData;
 
 import java.io.IOException;
+import java.util.Set;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -20,10 +22,19 @@ public class Main {
         checker.check(model);
 
         Model model1 = LoadData.initAndLoadModelFromResource("streetCrimeCamden.rdf", Lang.RDFXML);
-        DataChecker dataChecker = new DataChecker(model1);
-        dataChecker.getProperties();
-        //StringWriter out = new StringWriter();
-        //RDFDataMgr.write(out, model1, Lang.TURTLE);
-       // System.out.println(out.toString());
+
+
+        DataSet dataSet = new DataSet(model1);
+        Set<String> ontologies = dataSet.getNamespaces();
+
+        for (String ont : ontologies) {
+            System.out.println(ont);
+            FoopsChecker foopsChecker = new FoopsChecker(ont);
+            System.out.println("Results of ontology:");
+            System.out.println(foopsChecker.getOntology_title());
+            System.out.println(foopsChecker.getOverall_score());
+        }
+
+
     }
 }

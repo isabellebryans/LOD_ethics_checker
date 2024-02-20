@@ -1,19 +1,17 @@
 package data_checker;
 
-import ont_checker.FoopsCheck;
-import org.junit.jupiter.api.Assertions;
+import ont_checker.FoopsChecker;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-class FoopsCheckTest {
+class FoopsCheckerTest {
     String uri = "http://xmlns.com/foaf/0.1/";
     @Test
     void sendHttpFoopsTest() throws IOException {
-        FoopsCheck check = new FoopsCheck(uri);
-        System.out.println(check.getTitle());
+        FoopsChecker check = new FoopsChecker(uri);
+        System.out.println(check.getOntology_title());
         System.out.println(check.getChecks());
-
 
     }
 }

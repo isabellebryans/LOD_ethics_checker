@@ -14,13 +14,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoopsCheck {
+public class FoopsChecker {
     final String URI;
-    private String title;
+    private String ontology_title;
     private double overall_score;
     private List<Check> checks;
 
-    public FoopsCheck(String uri) throws IOException {
+    public FoopsChecker(String uri) throws IOException {
         this.URI = uri;
         send_http_request();
     }
@@ -62,7 +62,7 @@ public class FoopsCheck {
 
     private void set_results(String json){
         JSONObject jsonObject = new JSONObject(json);
-        this.title = jsonObject.getString("ontology_title");
+        this.ontology_title = jsonObject.getString("ontology_title");
         this.overall_score = jsonObject.getDouble("overall_score");
         // Parsing checks array
         JSONArray checksArray = jsonObject.getJSONArray("checks");
@@ -75,7 +75,7 @@ public class FoopsCheck {
             check.setCategoryId(checkObject.getString("category_id"));
             check.setStatus(checkObject.getString("status"));
             check.setTitle(checkObject.getString("title"));
-            check.setExplanation(checkObject.getString("explanation"));
+            check.setExplanation(checkObject.optString("explanation"));
             check.setDescription(checkObject.getString("description"));
             check.setTotalPassedTests(checkObject.getInt("total_passed_tests"));
             check.setTotalTestsRun(checkObject.getInt("total_tests_run"));
@@ -85,8 +85,8 @@ public class FoopsCheck {
         this.checks = checks1;
     }
     // Getters
-    public String getTitle() {
-        return title;
+    public String getOntology_title() {
+        return ontology_title;
     }
 
     public double getOverall_score() {

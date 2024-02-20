@@ -1,4 +1,4 @@
-package data_checker;
+package utils;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
@@ -8,39 +8,27 @@ import org.apache.jena.rdf.model.StmtIterator;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DataChecker {
-    private Model model;
-    private Set<Property> properties;
-    private Set<String> namespaces;
-
-    //constructor
-    public DataChecker(Model m) {
-        model = m;
-        setProperties(model);
-        extractNamespaces();
-    }
-
-
-
-    private void setProperties(Model model){
+public class ExtractionMethods {
+    public static Set<Property> extractProperties(Model model){
         // Collect unique properties
-        Set<Property> properties1 = new HashSet<>();
+        Set<Property> properties = new HashSet<>();
         StmtIterator iter = model.listStatements();
         while (iter.hasNext()) {
             Statement stmt = iter.nextStatement();
             Property property = stmt.getPredicate();
-            properties1.add(property);
+            properties.add(property);
         }
 
         // Print the unique properties
         System.out.println("Unique Properties:");
-        for (Property property : properties1) {
+        for (Property property : properties) {
             System.out.println(property.getURI());
         }
-        properties = properties1;
+        return properties;
     }
-    private void extractNamespaces() {
-        namespaces = new HashSet<>();
+
+    public static Set<String> extractNamespaces(Set<Property> properties){
+        Set<String> namespaces = new HashSet<>();
         for (Property property : properties) {
             String namespace = extractNamespace(property.getURI());
             namespaces.add(namespace);
@@ -49,9 +37,10 @@ public class DataChecker {
         for (String ns : namespaces) {
             System.out.println(ns);
         }
+        return namespaces;
     }
 
-    private String extractNamespace(String uri) {
+    private static String extractNamespace(String uri) {
         // Find the index of the last occurrence of '/' or '#'
         int lastSlashIndex = uri.lastIndexOf('/');
         int lastHashIndex = uri.lastIndexOf('#');
@@ -66,13 +55,5 @@ public class DataChecker {
 
         // If '/' or '#' is not found, return the whole URI
         return uri;
-    }
-
-    public Set<Property> getProperties(){
-        return properties;
-    }
-
-    public Model getModel() {
-        return model;
     }
 }
