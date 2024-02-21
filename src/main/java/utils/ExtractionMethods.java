@@ -8,6 +8,8 @@ import org.apache.jena.rdf.model.StmtIterator;
 import java.util.HashSet;
 import java.util.Set;
 
+
+// Methods to extract entities from Dataset
 public class ExtractionMethods {
     public static Set<Property> extractProperties(Model model){
         // Collect unique properties

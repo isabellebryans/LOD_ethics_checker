@@ -1,5 +1,6 @@
 package org.example;
 import data_checker.DataSet;
+import utils.DownloadFile;
 import ont_checker.FoopsChecker;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
@@ -22,7 +23,6 @@ public class Main {
         checker.check(model);
 
         Model model1 = LoadData.initAndLoadModelFromResource("streetCrimeCamden.rdf", Lang.RDFXML);
-
 
         DataSet dataSet = new DataSet(model1);
         Set<String> ontologies = dataSet.getNamespaces();
