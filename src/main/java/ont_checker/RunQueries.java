@@ -4,53 +4,54 @@ import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class RunQueries {
-    // Query to check if the data is split based on a personal constraint that may be used in discrimination of the group
-    // can you get rid of this dimension?
-    final String discrim_query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-            "SELECT * " +
-            "WHERE{" +
-            "?s rdfs:label ?o." +
-            "FILTER (CONTAINS(?o, 'sex') || CONTAINS(?o, 'unemploy') || CONTAINS(?o, 'age'))" +
-            "}";
+    static final String[] Check1 = {"child", "criminal", "disab"};
+    static final String[] Check2 = {"sex", "gender", "age", "ethnicity", "religion", "nationality"};
+    static final String[] Check3 = {"crime", "education", "assault", "income"};
 
-    // Query to check the specification of the involvement of vulnerable groups in the data
-    // Be mindful about how this data is used and affects the vulnerable groups
-    final String vulnerableppl_query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
-            "SELECT * " +
-            "WHERE{" +
-            "?s rdfs:label ?o." +
-            "FILTER (CONTAINS(?o, 'child') || CONTAINS(?o, 'disab') || CONTAINS(?o, 'criminal'))" +
-            "}";
-
-    final String qs_gender = "";
-
-    public void print_hello(){
-        System.out.println("In OntologyChecker class");
+    public static String[] runCheck1(Model m){
+        return runCheck(m, Check1);
     }
-    static boolean runQuery(String query_string, Model m){
-        boolean found = false;
-        System.out.println(query_string);
-        Query q = QueryFactory.create(query_string);
-        QueryExecution qexec = QueryExecutionFactory.create(q, m);
-        try{
-            ResultSet results = qexec.execSelect();
-            while (results.hasNext()){
-                found = true;
-                QuerySolution solution = results.nextSolution();
-                Resource name = solution.getResource("s");
-                System.out.println(name);
+    public static String[] runCheck2(Model m){
+        return runCheck(m, Check2);
+    }
+
+    public static String[] runCheck3(Model m){
+        return runCheck(m, Check3);
+    }
+
+    private static String[] runCheck(Model m, String[] words){
+        ArrayList<String> terms_found = new ArrayList<>();
+        for (String word : words) {
+            boolean found = false;
+            String query_string = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>" +
+                    "SELECT * " +
+                    "WHERE{" +
+                    "?s rdfs:label ?o." +
+                    "FILTER (CONTAINS(?o, "+ word + ") )" +
+                    "}";
+            System.out.println(query_string);
+            Query q = QueryFactory.create(query_string);
+            QueryExecution qexec = QueryExecutionFactory.create(q, m);
+            try{
+                ResultSet results = qexec.execSelect();
+                while (results.hasNext()){
+                    found = true;
+                    QuerySolution solution = results.nextSolution();
+                    Resource name = solution.getResource("s");
+                    System.out.println(name);
+                }
+                if (found){
+                    terms_found.add(word);
+                }
+            } finally {
+                qexec.close();
             }
-        } finally {
-            qexec.close();
         }
-        return found;
-    }
 
-    public void check(Model model){
-        boolean result_discrimination = runQuery(discrim_query, model);
-        boolean result_vulnerableppl = runQuery(vulnerableppl_query, model);
-        System.out.println(result_discrimination);
-        System.out.println(result_vulnerableppl);
+        return terms_found.toArray(new String[0]);
     }
 }

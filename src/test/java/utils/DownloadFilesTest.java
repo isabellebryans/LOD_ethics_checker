@@ -1,15 +1,11 @@
 package utils;
 
-import ont_checker.FoopsChecker;
-import utils.DownloadFile;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class DownloadFileTest {
+class DownloadFilesTest {
     String[] namespaces= {"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "http://www.w3.org/2003/01/geo/wgs84_pos#",
             "https://opendata.camden.gov.uk/resource/qeje-7ve7/",
@@ -21,17 +17,17 @@ class DownloadFileTest {
     String url1 = "https://www.w3.org/2003/01/geo/wgs84_pos";
     @Test
     void downloadOntTest () throws IOException {
-        Path folder = DownloadFile.createTempFolder();
+        Path folder = DownloadFiles.createTempFolder();
 //        DownloadFile.downloadOntology(url1);
 //        DownloadFile.downloadOntology(url);
 //        DownloadFile.downloadOntology(namespaces[4]);
         for (String ont : namespaces) {
             System.out.println(ont);
             // Now download ontologies used, and run queries on them
-            DownloadFile.downloadOntology(ont, folder);
+            DownloadFiles.downloadOntology(ont, folder);
 
         }
-        DownloadFile.removeTemporaryFolders(folder);
+        //DownloadFiles.removeTemporaryFolders(folder);
     }
 
 }

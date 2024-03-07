@@ -4,7 +4,6 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,11 +12,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 
-public class DownloadFile {
+public class DownloadFiles {
     private static int number;
-    private static final Logger logger = LoggerFactory.getLogger(DownloadFile.class);
+    private static final Logger logger = LoggerFactory.getLogger(DownloadFiles.class);
     private static final String[] common_vocabs ={
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
             "http://www.w3.org/2000/01/rdf-schema#",
@@ -29,16 +27,17 @@ public class DownloadFile {
             "http://dbpedia.org/resource/"
     };
 
-    public static void downloadOntology(String ontURL, Path tmpFolder) throws IOException {
+    public static boolean downloadOntology(String ontURL, Path tmpFolder) throws IOException {
         // Create temp folder
         // If the ontology is a common benign vocab, ignore
         if (Utilities.ArrayContains(common_vocabs, ontURL)){
-            return;
+            return false;
         }
         number=number+1;
         String ontologyPath = tmpFolder + File.separator + "ontology" + number + ".rdf";
         downloadFile(ontURL, ontologyPath);
         logger.info("Loading ontology ");
+        return true;
     }
 
     public static Path createTempFolder(){
@@ -64,6 +63,9 @@ public class DownloadFile {
             // Remove the trailing "/"
             fileURL = fileURL.substring(0, fileURL.length() - 1);
         }
+        // Prepend the fileURL to the content
+        String firstLine = fileURL + System.lineSeparator();
+
         URL url = new URL(fileURL+".rdf");
         System.out.println("Trying to download " + url.toString());
         try {
@@ -73,16 +75,17 @@ public class DownloadFile {
             try (FileOutputStream outputStream = new FileOutputStream(savePath)) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
+                outputStream.write(firstLine.getBytes());
                 while ((bytesRead = inputStream.read(buffer)) != -1) {
                     outputStream.write(buffer, 0, bytesRead);
                 }
                 System.out.println("Downloaded successfully");
+
             }
         } catch (IOException e) {
             // Print an error message if download fails
             System.out.println("Could not download file: " + e.getMessage());
         }
-
     }
 
     public static void removeTemporaryFolders(Path tmpFolder){
