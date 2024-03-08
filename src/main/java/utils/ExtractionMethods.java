@@ -1,11 +1,14 @@
 package utils;
 
+import data_checker.Namespace;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -29,17 +32,20 @@ public class ExtractionMethods {
         return properties;
     }
 
-    public static Set<String> extractNamespaces(Set<Property> properties){
-        Set<String> namespaces = new HashSet<>();
+    public static List<Namespace> extractNamespaces(Set<Property> properties){
+        Set<String> namespace_string = new HashSet<>();
+        ArrayList<Namespace> namespaces1 = new ArrayList<>();
         for (Property property : properties) {
             String namespace = extractNamespace(property.getURI());
-            namespaces.add(namespace);
+            namespace_string.add(namespace);
         }
         System.out.println("Namespaces:");
-        for (String ns : namespaces) {
+        for (String ns : namespace_string) {
+            Namespace namespace = new Namespace(ns);
+            namespaces1.add(namespace);
             System.out.println(ns);
         }
-        return namespaces;
+        return namespaces1;
     }
 
     private static String extractNamespace(String uri) {

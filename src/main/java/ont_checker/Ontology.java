@@ -3,11 +3,12 @@ package ont_checker;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.DC_11;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Ontology {
     Model ontModel;
-    String URI=null;
+    String uri;
     // Metadata
     String description=null;
     String title=null;
@@ -22,18 +23,24 @@ public class Ontology {
     // Check3 = check for sensitive topics
     String[] Check3=null;
 
-    public Ontology(Model m){
+    public Ontology(Model m, String uri){
         this.ontModel = m;
-        //this.URI = uri;
-        System.out.println("Ontology created");
+        this.uri = uri;
+        System.out.println("Ontology created from uri "+uri);
         setMetaData();
+        testOntology();
+        System.out.println("Check 1 contains: "+ Arrays.toString(Check1));
+        System.out.println("Check 2 contains: "+ Arrays.toString(Check2));
+        System.out.println("Check 3 contains: "+ Arrays.toString(Check3));
     }
 
     public void testOntology(){
-        Check1 = RunQueries.runCheck1(ontModel);
-        Check2 = RunQueries.runCheck2(ontModel);
-        Check3 = RunQueries.runCheck3(ontModel);
+        Check1 = RunQueries.runCheck1(this);
+        Check2 = RunQueries.runCheck2(this);
+        Check3 = RunQueries.runCheck3(this);
     }
+
+
 
     // Check metadata, description etc
     // Try to find keywords in dc:description where dc=http://purl.org/dc/elements/1.1/
@@ -85,4 +92,11 @@ public class Ontology {
         }
     }
 
+    public String getDescription(){
+        return description;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }

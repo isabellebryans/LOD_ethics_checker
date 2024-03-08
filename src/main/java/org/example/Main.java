@@ -26,20 +26,20 @@ public class Main {
         Model model1 = LoadData.initAndLoadModelFromResource("streetCrimeCamden.rdf", Lang.RDFXML);
 
         DataSet dataSet = new DataSet(model1);
-        Set<String> ontologies = dataSet.getNamespaces();
-
-        Path tmpfolder= DownloadFiles.createTempFolder();
-        for (String ont : ontologies) {
-            System.out.println(ont);
-            FoopsChecker foopsChecker = new FoopsChecker(ont);
-            System.out.println("Results of ontology:");
-            System.out.println(foopsChecker.getOntology_title());
-            System.out.println(foopsChecker.getOverall_score());
-            // Now download ontologies used, and run queries on them
-            DownloadFiles.downloadOntology(ont, tmpfolder);
-
-        }
-        System.out.println(tmpfolder);
+//        Set<String> ontologies = dataSet.getNamespaces();
+//
+//        Path tmpfolder= DownloadFiles.createTempFolder();
+//        for (String ont : ontologies) {
+//            System.out.println(ont);
+//            FoopsChecker foopsChecker = new FoopsChecker(ont);
+//            System.out.println("Results of ontology:");
+//            System.out.println(foopsChecker.getOntology_title());
+//            System.out.println(foopsChecker.getOverall_score());
+//            // Now download ontologies used, and run queries on them
+//            DownloadFiles.downloadOntology(ont, tmpfolder);
+//
+//        }
+        //System.out.println(tmpfolder);
         // For file in temp folder, run Ontology Checker
 
 

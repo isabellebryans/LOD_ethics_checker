@@ -4,7 +4,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import utils.LoadData;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,11 +14,11 @@ import java.util.List;
 
 public class OntologyChecker {
 
-    private List<Ontology> ontologies = new ArrayList<>();
+    private Ontology[] ontologies;
     final Path directory;
     public OntologyChecker(Path folder) throws IOException {
         this.directory=folder;
-        setOntologies();
+        ontologies=setOntologies();
 
         // Delete temp folder
         //DownloadFile.removeTemporaryFolders(folder);
@@ -40,11 +42,12 @@ public class OntologyChecker {
             for (File file : files) {
                 // Check if it's a file (not a directory)
                 if (file.isFile()) {
-                    try{
+                    try  {
+                        String uri = LoadData.getURIfromFile(file);
                         Model m = LoadData.initAndLoadModelFromFolder(file, Lang.RDFXML);
-                        Ontology ontology = new Ontology(m);
+                       // System.out.println(m);
+                        Ontology ontology = new Ontology(m, uri);
                         // ADD ONTOLOGY TO ONTOLOGIES ARRAY HERE
-                        ontologies.add(ontology);
                         onts.add(ontology);
 
                     } catch (IOException e) {
@@ -56,8 +59,6 @@ public class OntologyChecker {
             System.out.println("Temporary folder does not exist or is not a directory.");
             return null;
         }
-
-
         return onts.toArray(new Ontology[0]);
     }
 

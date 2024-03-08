@@ -4,10 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -31,6 +28,7 @@ public class DownloadFiles {
         // Create temp folder
         // If the ontology is a common benign vocab, ignore
         if (Utilities.ArrayContains(common_vocabs, ontURL)){
+
             return false;
         }
         number=number+1;
@@ -64,7 +62,7 @@ public class DownloadFiles {
             fileURL = fileURL.substring(0, fileURL.length() - 1);
         }
         // Prepend the fileURL to the content
-        String firstLine = fileURL + System.lineSeparator();
+        String firstLine = "<!--"+fileURL+"-->" + System.lineSeparator();
 
         URL url = new URL(fileURL+".rdf");
         System.out.println("Trying to download " + url.toString());
@@ -76,8 +74,15 @@ public class DownloadFiles {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 outputStream.write(firstLine.getBytes());
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+
+                // Skip the XML declaration and other processing instructions
+                while ((line = reader.readLine()) != null) {
+                    if (!line.startsWith("<?")) {
+                        outputStream.write(line.getBytes());
+                        outputStream.write(System.lineSeparator().getBytes());
+                    }
                 }
                 System.out.println("Downloaded successfully");
 
